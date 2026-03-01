@@ -29,13 +29,11 @@ class HomeView(ft.View):
         ]
         
 
-    async def mudar_tela(self, e, rota):
-        await self.page.push_route(rota)
+    async def mudar_tela(self, e):
+        # A propriedade .data do Container armazena a rota que enviamos na criação
+        await self.page.push_route(e.control.data)
 
     def _create_card(self, title, icon, rota):
-        async def ao_clicar(e):
-            await self.mudar_tela(e, rota)
-
         card = ft.Container(
             content=ft.Column([
                 ft.Icon(icon=icon, size=60, color=ft.Colors.WHITE),
@@ -43,12 +41,13 @@ class HomeView(ft.View):
                 ], 
                 alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
             
+            data=rota, # Guardamos a rota no container
             width=250,
             height=200,
             bgcolor=ft.Colors.ORANGE_800,
             border_radius=15,
             padding=20,
-            on_click=ao_clicar,
+            on_click=self.mudar_tela,
             scale=1.0,
             animate_scale=ft.Animation(duration=300, curve=ft.AnimationCurve.BOUNCE_OUT),
             on_hover=self._on_hover
