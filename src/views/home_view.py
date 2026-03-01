@@ -10,10 +10,10 @@ class HomeView(ft.View):
             can_pop=False,
 
             controls=[
-                ft.Column(
+                ft.Row(
                     expand=True,
                     alignment=ft.MainAxisAlignment.CENTER,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
                     controls=[
                         ft.Button(
                             content=ft.Text("Abrir Admin"),
