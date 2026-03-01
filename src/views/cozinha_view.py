@@ -13,7 +13,6 @@ class CozinhaView(ft.View):
         
         # Cria a lista visual de pedidos
         self.lista_pedidos = ft.ListView(expand=True, spacing=10)
-        self.atualizar_lista_pedidos()
 
         super().__init__(
             route=path,
@@ -26,6 +25,8 @@ class CozinhaView(ft.View):
                 )
             ],
         )
+
+        self.atualizar_lista_pedidos()
 
     def atualizar_lista_pedidos(self):
         self.lista_pedidos.controls.clear()
@@ -41,7 +42,7 @@ class CozinhaView(ft.View):
                 cor_status = ft.Colors.GREEN_100
 
             card = ft.Card(
-                color=cor_status,
+                bgcolor=cor_status,
                 content=ft.Container(
                     padding=15,
                     content=ft.Column([
@@ -56,13 +57,13 @@ class CozinhaView(ft.View):
                         
                         # Botões de ação
                         ft.Row([
-                            ft.ElevatedButton(
-                                text="Ver Detalhes",
+                            ft.Button(
+                                content=ft.Text("Ver Detalhes"),
                                 icon=ft.Icons.VISIBILITY,
                                 on_click=lambda e, p=pedido: self.mostrar_detalhes(p)
                             ),
-                            ft.ElevatedButton(
-                                text="Em Preparação" if pedido["status"] == "Pendente" else "Finalizar",
+                            ft.Button(
+                                content=ft.Text("Em Preparação" if pedido["status"] == "Pendente" else "Finalizar"),
                                 icon=ft.Icons.PLAY_ARROW if pedido["status"] == "Pendente" else ft.Icons.CHECK,
                                 disabled=pedido["status"] == "Finalizado",
                                 on_click=lambda e, p=pedido: self.alterar_status(p)
@@ -73,7 +74,10 @@ class CozinhaView(ft.View):
             )
             self.lista_pedidos.controls.append(card)
         
-        self.update()
+        try:
+            self.update()
+        except Exception:
+            pass
 
     def mostrar_detalhes(self, pedido):
         dialog = ft.AlertDialog(

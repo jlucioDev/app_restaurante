@@ -14,12 +14,16 @@ class HomeView(ft.View):
                     expand=True,
                     
                     controls=[
-                        ft.ElevatedButton(
+                        ft.Button(
                             "Abrir Admin",
                             on_click=self.open_admin_view
                         ),
-                        ft.ElevatedButton(
-                            "Abrir Cozinha",
+                        ft.Button(
+                            content=ft.Text("Abrir Admin"),
+                            on_click=self.open_admin_view
+                        ),
+                        ft.Button(
+                            content=ft.Text("Abrir Cozinha"),
                             on_click=self.open_cozinha_view
                         )
                 ])
