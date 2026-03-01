@@ -6,6 +6,7 @@ class AdminView(ft.View):
     def __init__(self, path):
         super().__init__(
             route=path,
+            appbar=ft.AppBar(title=ft.Text("Página Administração"), bgcolor=ft.Colors.BLUE_400),
             controls=[
                 ft.Row(
                     expand=True,

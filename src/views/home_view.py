@@ -15,8 +15,12 @@ class HomeView(ft.View):
                     
                     controls=[
                         ft.ElevatedButton(
-                            text="Abrir Admin",
+                            "Abrir Admin",
                             on_click=self.open_admin_view
+                        ),
+                        ft.ElevatedButton(
+                            "Abrir Cozinha",
+                            on_click=self.open_cozinha_view
                         )
                 ])
             ],
@@ -24,4 +28,7 @@ class HomeView(ft.View):
     
     async def open_admin_view(self, e):
         await self.page.push_route("/admin")
+        
+    async def open_cozinha_view(self, e):
+        await self.page.push_route("/cozinha")
         

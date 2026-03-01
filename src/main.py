@@ -1,6 +1,7 @@
 import flet as ft
 from views.home_view import HomeView
 from views.admin_view import AdminView
+from views.cozinha_view import CozinhaView
 
 
 def main(page: ft.Page):
@@ -14,6 +15,9 @@ def main(page: ft.Page):
 
         if page.route == "/admin":
             page.views.append(AdminView(page.route))
+            
+        elif page.route == "/cozinha":
+            page.views.append(CozinhaView(page.route))
             
         page.update()
        
