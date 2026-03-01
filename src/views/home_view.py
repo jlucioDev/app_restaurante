@@ -15,9 +15,9 @@ class HomeView(ft.View):
                     ft.Text("Selecione o seu perfil de acesso", size=20, color=ft.Colors.WHITE),
                     ft.Container(height=40), #Espaçador
                     ft.Row([
-                            self._create_card("Administração", ft.Icons.SETTINGS, self.open_admin_view),
-                            self._create_card("Cliente", ft.Icons.RESTAURANT, self.open_admin_view),
-                            self._create_card("Cozinha", ft.Icons.KITCHEN, self.open_cozinha_view),
+                            self._create_card("Administração", ft.Icons.SETTINGS, "/admin"),
+                            self._create_card("Cliente", ft.Icons.RESTAURANT, "/cliente"),
+                            self._create_card("Cozinha", ft.Icons.KITCHEN, "/cozinha"),
                             ],
                             alignment=ft.MainAxisAlignment.CENTER,
                             spacing=30
@@ -28,16 +28,14 @@ class HomeView(ft.View):
             )
         ]
         
-    
-    async def open_admin_view(self, e):
-        await self.page.push_route("/admin")
-        
-    async def open_cozinha_view(self, e):
-        await self.page.push_route("/cozinha")
-    
 
+    async def mudar_tela(self, e, rota):
+        await self.page.push_route(rota)
 
     def _create_card(self, title, icon, rota):
+        async def ao_clicar(e):
+            await self.mudar_tela(e, rota)
+
         card = ft.Container(
             content=ft.Column([
                 ft.Icon(icon=icon, size=60, color=ft.Colors.WHITE),
@@ -50,9 +48,7 @@ class HomeView(ft.View):
             bgcolor=ft.Colors.ORANGE_800,
             border_radius=15,
             padding=20,
-            # ink=True absorve o evento de hover no backend do Flutter, 
-            # então precisamos desativá-lo para o on_hover da escala funcionar.
-            on_click=rota,
+            on_click=ao_clicar,
             scale=1.0,
             animate_scale=ft.Animation(duration=300, curve=ft.AnimationCurve.BOUNCE_OUT),
             on_hover=self._on_hover
