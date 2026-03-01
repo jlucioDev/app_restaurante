@@ -11,13 +11,13 @@ def main(page: ft.Page):
     def nova_rota():
         page.views.clear()
 
-        page.views.append(HomeView("/"))
+        page.views.append(HomeView(page))
 
         if page.route == "/admin":
-            page.views.append(AdminView(page.route))
+            page.views.append(AdminView(page))
             
         elif page.route == "/cozinha":
-            page.views.append(CozinhaView(page.route))
+            page.views.append(CozinhaView(page))
             
         page.update()
        

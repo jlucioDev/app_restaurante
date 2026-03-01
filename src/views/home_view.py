@@ -3,9 +3,9 @@ import flet as ft
 
 class HomeView(ft.View):
 
-    def __init__(self, path):
+    def __init__(self, page):
         super().__init__(
-            route=path,
+            route="/",
             appbar= ft.AppBar(title=ft.Text("Página HOME"), bgcolor=ft.Colors.BLUE_400),
             can_pop=False,
 

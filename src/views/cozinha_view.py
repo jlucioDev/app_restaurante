@@ -3,7 +3,7 @@ from datetime import datetime
 
 class CozinhaView(ft.View):
 
-    def __init__(self, path):
+    def __init__(self, page):
         # Dados simulados de pedidos
         self.pedidos = [
             {"id": 1, "status": "Pendente", "data_hora": datetime.now().strftime("%d/%m/%Y %H:%M"), "detalhes": "2x Hambúrguer, 1x Coca-Cola"},
@@ -15,7 +15,7 @@ class CozinhaView(ft.View):
         self.lista_pedidos = ft.ListView(expand=True, spacing=10)
 
         super().__init__(
-            route=path,
+            route="/cozinha",
             appbar=ft.AppBar(title=ft.Text("Visão da Cozinha - Pedidos"), bgcolor=ft.Colors.ORANGE_400),
             controls=[
                 ft.Container(
