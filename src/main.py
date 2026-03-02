@@ -11,7 +11,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     
 
-    def nova_rota(route=None):
+    def nova_rota(e: ft.RouteChangeEvent = None):
         page.views.clear()
 
         # Sempre adiciona a Home por debaixo de tudo na pilha
@@ -36,12 +36,13 @@ def main(page: ft.Page):
         page.update()
        
     
-    async def voltar_rota_anterior(e: ft.ViewPopEvent):
+    def voltar_rota_anterior(e: ft.ViewPopEvent):
         if e.view is not None:
-            print("View pop: ", e.view)
+            print("View pop: ", e.view.route)
             page.views.pop()
             top_view = page.views[-1]
-            await page.push_route(top_view.route)
+            page.route = top_view.route
+            page.update()
 
 
 
@@ -53,4 +54,4 @@ def main(page: ft.Page):
 
 # Executando o aplicativo
 if __name__ == "__main__":
-    ft.run(main)
+    ft.app(target=main)

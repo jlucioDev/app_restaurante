@@ -38,7 +38,10 @@ class SidebarItem(ft.Container):
         self.data_checked = checked
         self.data = checked
         self._set_style(checked)
-        self.update()
+        try:
+            self.update()
+        except Exception:
+            pass
 
     def _on_hover(self, e):
         # Hover effect only if it's not the active (checked) item
@@ -153,13 +156,22 @@ class Sidebar(ft.Container):
         self.update()
 
     def _on_item_click(self, clicked_item: SidebarItem):
-        # Clear all items
-        for item in self.items_top_sidebar + self.items_bottom_sidebar:
-            item.set_checked(False)
-            
-        # Select current item
-        clicked_item.set_checked(True)
-        
-        # Notify parent view to change main content
+        # Notify parent view to change main content FIRST before we redraw the sidebar
+        # because routing might unmount this very sidebar
         if self.on_menu_change:
             self.on_menu_change(clicked_item.text_val)
+
+        # Clear all items safely if still mounted
+        for item in self.items_top_sidebar + self.items_bottom_sidebar:
+            try:
+                if item.page:
+                    item.set_checked(False)
+            except Exception:
+                pass
+            
+        # Select current item safely
+        try:
+            if clicked_item.page:
+                clicked_item.set_checked(True)
+        except Exception:
+            pass

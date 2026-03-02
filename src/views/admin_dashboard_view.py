@@ -9,8 +9,6 @@ class AdminDashboardView(ft.View):
             padding=0
         )
         
-        self.page = page
-        
         # Sub-views container (right side panel)
         self.main_content = ft.Container(
             expand=True,
@@ -38,17 +36,17 @@ class AdminDashboardView(ft.View):
     def handle_content_change(self, menu_name):
         # Routing mechanism using main.py router
         if menu_name == "Dashboard":
-            self.page.go("/admin/dashboard")
+            self.page.run_task(self.page.push_route, "/admin/dashboard")
         elif menu_name == "Cadastros":
-            self.page.go("/admin/cadastros")
+            self.page.run_task(self.page.push_route, "/admin/cadastros")
         elif menu_name == "Cozinha":
-            self.page.go("/admin/cozinha")
+            self.page.run_task(self.page.push_route, "/admin/cozinha")
         elif menu_name == "Usuário":
-            self.page.go("/admin/usuario")
+            self.page.run_task(self.page.push_route, "/admin/usuario")
         elif menu_name == "Configurações":
-            self.page.go("/admin/configuracoes")
+            self.page.run_task(self.page.push_route, "/admin/configuracoes")
         elif menu_name == "Sair":
-            self.page.go("/")
+            self.page.run_task(self.page.push_route, "/")
             
     def _create_info_card(self, title, value, icon, color):
         return ft.Container(
@@ -68,8 +66,8 @@ class AdminDashboardView(ft.View):
 
     def build_content(self):
         # Caixa Actions
-        btn_abrir_caixa = ft.ElevatedButton("Abrir Caixa", icon=ft.Icons.PLAY_ARROW, bgcolor=ft.Colors.GREEN_700, color=ft.Colors.WHITE)
-        btn_fechar_caixa = ft.ElevatedButton("Fechar Caixa", icon=ft.Icons.STOP, bgcolor=ft.Colors.RED_700, color=ft.Colors.WHITE)
+        btn_abrir_caixa = ft.Button("Abrir Caixa", icon=ft.Icons.PLAY_ARROW, bgcolor=ft.Colors.GREEN_700, color=ft.Colors.WHITE)
+        btn_fechar_caixa = ft.Button("Fechar Caixa", icon=ft.Icons.STOP, bgcolor=ft.Colors.RED_700, color=ft.Colors.WHITE)
         row_acoes_caixa = ft.Row([btn_abrir_caixa, btn_fechar_caixa], alignment=ft.MainAxisAlignment.END)
         
         # Row 1: Financeiro
