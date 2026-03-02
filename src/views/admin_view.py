@@ -26,9 +26,9 @@ class SidebarItem(ft.Container):
 
     def _set_style(self, checked):
         if checked:
-            self.bgcolor = ft.Colors.ORANGE_200
-            self.icon_ctrl.color = ft.Colors.GREY_600
-            self.text_ctrl.color = ft.Colors.GREY_600
+            self.bgcolor = ft.Colors.ORANGE_800
+            self.icon_ctrl.color = ft.Colors.GREY_100
+            self.text_ctrl.color = ft.Colors.GREY_100
         else:
             self.bgcolor = ft.Colors.TRANSPARENT
             self.icon_ctrl.color = ft.Colors.GREY_600
@@ -44,7 +44,7 @@ class SidebarItem(ft.Container):
         # Hover effect only if it's not the active (checked) item
         if not self.data_checked:
             is_transparent = self.bgcolor == ft.Colors.TRANSPARENT
-            self.bgcolor = ft.Colors.ORANGE_800 if is_transparent else ft.Colors.TRANSPARENT
+            self.bgcolor = ft.Colors.ORANGE_200 if is_transparent else ft.Colors.TRANSPARENT
             
             # Highlight text/icon when hovering (Orange background -> Lighter grey text)
             hover_color = ft.Colors.GREY_300 if is_transparent else ft.Colors.GREY_600
@@ -55,7 +55,6 @@ class SidebarItem(ft.Container):
     def _on_click(self, e):
         if self.on_click_callback:
             self.on_click_callback(self)
-
 
 class Sidebar(ft.Container):
     def __init__(self, on_menu_change):
@@ -70,17 +69,17 @@ class Sidebar(ft.Container):
         # Header Elements
         self.btn_menu = ft.IconButton(icon=ft.Icons.MENU, on_click=self._toggle_menu, icon_color=ft.Colors.GREY_600)
         self.avatar = ft.CircleAvatar(
+            align=ft.Alignment.CENTER ,
             content=ft.Text("JL", size=30), 
             color=ft.Colors.GREY_900, 
-            bgcolor=ft.Colors.ORANGE_900, 
-            width=200, 
+            bgcolor=ft.Colors.ORANGE_800, 
             radius=50,
             scale=1.0,
             animate_scale=ft.Animation(800, ft.AnimationCurve.DECELERATE)
         )
         
-        self.txtNomeUsuario = ft.Text("João Lúcio", weight=ft.FontWeight.BOLD, size=25, color=ft.Colors.WHITE)
-        self.txtPerfilUsuario = ft.Text("Administrador do Sistema", size=18, color=ft.Colors.GREY_300)
+        self.txtNomeUsuario = ft.Text("João Lúcio", weight=ft.FontWeight.BOLD, size=25, color=ft.Colors.GREY_500, align=ft.Alignment.CENTER)
+        self.txtPerfilUsuario = ft.Text("Administrador do Sistema", size=18, color=ft.Colors.GREY_700, align=ft.Alignment.CENTER)
         
         # Wrapped in animated containers to collapse space physically
         self.cont_nome = ft.Container(
@@ -101,10 +100,16 @@ class Sidebar(ft.Container):
         )
         
         # Create Items
-        self.items = [
+        self.items_top_sidebar = [
             SidebarItem(ft.Icons.HOME_OUTLINED, "Dashboard", True, self._on_item_click),
             SidebarItem(ft.Icons.INSERT_COMMENT_OUTLINED, "Cadastros", False, self._on_item_click),
             SidebarItem(ft.Icons.KITCHEN_OUTLINED, "Cozinha", False, self._on_item_click),
+        ]
+
+        self.items_bottom_sidebar = [
+            SidebarItem(ft.Icons.PERSON, "Usuário", False, self._on_item_click),
+            SidebarItem(ft.Icons.SETTINGS, "Configurações", False, self._on_item_click),
+            SidebarItem(ft.Icons.EXIT_TO_APP, "Sair", False, self._on_item_click)
         ]
         
         self.header_col = ft.Column([
@@ -114,12 +119,17 @@ class Sidebar(ft.Container):
             self.cont_perfil
         ])
         
-        self.items_col = ft.Column(self.items, expand=True)
+        self.items_col_top = ft.Column(self.items_top_sidebar, expand=True)
+        self.items_col_bottom = ft.Column(self.items_bottom_sidebar, expand=True)
 
         self.content = ft.Column([
             ft.Container(content=self.header_col, padding=0),
             ft.Container(height=50),
-            ft.Container(content=self.items_col, expand=True, height=100)
+            ft.Container(content=self.items_col_top, expand=True, height=100),
+            ft.Container(height= 50),
+            ft.Divider(color=ft.Colors.GREY_800),
+            ft.Container(content=self.items_col_bottom, expand=True, height=100)
+            
         ])
 
     def _toggle_menu(self, e):
@@ -134,7 +144,7 @@ class Sidebar(ft.Container):
             self.cont_perfil.height = 25
         else:
             self.width = 46
-            self.avatar.scale = 0.5
+            self.avatar.scale = 1.0
             self.cont_nome.opacity = 0.0
             self.cont_nome.height = 0
             self.cont_perfil.opacity = 0.0
@@ -144,7 +154,7 @@ class Sidebar(ft.Container):
 
     def _on_item_click(self, clicked_item: SidebarItem):
         # Clear all items
-        for item in self.items:
+        for item in self.items_top_sidebar + self.items_bottom_sidebar:
             item.set_checked(False)
             
         # Select current item
@@ -154,19 +164,18 @@ class Sidebar(ft.Container):
         if self.on_menu_change:
             self.on_menu_change(clicked_item.text_val)
 
-
 class AdminView(ft.View):
     def __init__(self, page):
         super().__init__(
             route="/admin", bgcolor=ft.Colors.GREY_900,
-            appbar=ft.AppBar(title=ft.Text(""), bgcolor=ft.Colors.ORANGE_800),
+            #appbar=ft.AppBar(title=ft.Text(""), bgcolor=ft.Colors.ORANGE_800),
             padding=0
         )
         
         # Sub-views container (right side panel)
         self.main_content = ft.Container(
             expand=True,
-            bgcolor=ft.Colors.BLACK,
+            bgcolor=ft.Colors.GREY_100,
             content=self.abrir_dashboard() # Default view
         )
         
@@ -185,13 +194,18 @@ class AdminView(ft.View):
         ]
 
     def handle_content_change(self, menu_name):
-        """Routing mechanism inside the Admin panel"""
+        # """Routing mechanism inside the Admin panel"""
         if menu_name == "Dashboard":
             self.main_content.content = self.abrir_dashboard()
         elif menu_name == "Cadastros":
             self.main_content.content = self.abrir_cadastros()
         elif menu_name == "Cozinha":
             self.main_content.content = self.abrir_cozinha_admin()
+        elif menu_name == "Sair":
+            # Aqui faça ele voltar para homeView
+            self.page.go("/")
+            return
+
             
         self.main_content.update()
 
@@ -201,10 +215,11 @@ class AdminView(ft.View):
                 ft.Icon(icon, size=40, color=color),
                 ft.Column([
                     ft.Text(title, size=14, color=ft.Colors.GREY_400),
-                    ft.Text(value, size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                    ft.Text(value, size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_800),
                 ], spacing=0)
             ]),
-            bgcolor=ft.Colors.GREY_900,
+            bgcolor=ft.Colors.GREY_200,
+            shadow=ft.BoxShadow(0.5,20,ft.Colors.GREY_400) ,
             padding=20,
             border_radius=10,
             expand=True
@@ -225,7 +240,7 @@ class AdminView(ft.View):
         
         # Row 2: Pedidos
         row_pedidos = ft.Row([
-            self._create_info_card("Pedidos Pendentes", "5", ft.Icons.PENDING_ACTIONS, ft.Colors.ORANGE_400),
+            self._create_info_card("Pedidos Pendentes", "5", ft.Icons.PENDING_ACTIONS, ft.Colors.RED_500),
             self._create_info_card("Em Preparação", "3", ft.Icons.SOUP_KITCHEN, ft.Colors.YELLOW_600),
             self._create_info_card("Finalizados (Hoje)", "42", ft.Icons.CHECK_CIRCLE, ft.Colors.GREEN_400),
         ])
@@ -236,19 +251,20 @@ class AdminView(ft.View):
         for nome, qtd in top_itens:
             lt_itens.controls.append(
                 ft.ListTile(
-                    leading=ft.Icon(ft.Icons.FASTFOOD, color=ft.Colors.ORANGE_500),
-                    title=ft.Text(nome, color=ft.Colors.WHITE),
+                    leading=ft.Icon(ft.Icons.FASTFOOD, color=ft.Colors.ORANGE_800),
+                    title=ft.Text(nome, color=ft.Colors.GREY_900),
                     trailing=ft.Text(f"{qtd} pedidos", color=ft.Colors.GREY_400)
                 )
             )
             
         container_itens = ft.Container(
             content=ft.Column([
-                ft.Text("Itens Mais Pedidos", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                ft.Text("Itens Mais Pedidos", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_900),
                 lt_itens
             ]),
-            bgcolor=ft.Colors.GREY_900,
+            bgcolor=ft.Colors.GREY_200,
             padding=20,
+            shadow=ft.BoxShadow(0.5,20,ft.Colors.GREY_400),
             border_radius=10,
             expand=True
         )
@@ -256,10 +272,10 @@ class AdminView(ft.View):
         return ft.Container(
             content=ft.Column([
                 ft.Row([
-                    ft.Text("Dashboard", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                    ft.Text("Dashboard", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.ORANGE_800),
                     row_acoes_caixa
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                ft.Divider(color=ft.Colors.GREY_800),
+                ft.Divider(color=ft.Colors.GREY_500),
                 row_financeiro,
                 ft.Container(height=10),
                 row_pedidos,
@@ -270,19 +286,19 @@ class AdminView(ft.View):
         )
         
     def abrir_cadastros(self):
-        # We will dynamically switch the content container based on the selected tab
+        
         content_area = ft.Container(
-            content=ft.Text("Lista de Usuários via BD em breve...", color=ft.Colors.WHITE), 
+            content=ft.Text("Lista de Usuários via BD em breve...", color=ft.Colors.GREY_400), 
             padding=20, 
             expand=True
         )
         
         # The distinct content for each tab
         tab_contents = {
-            "Usuários": ft.Text("Lista de Usuários via BD em breve...", color=ft.Colors.WHITE),
-            "Produtos": ft.Text("Lista de Produtos via BD em breve...", color=ft.Colors.WHITE),
-            "Categorias": ft.Text("Lista de Categorias via BD em breve...", color=ft.Colors.WHITE),
-            "Mesas": ft.Text("Gerenciamento de Mesas via BD em breve...", color=ft.Colors.WHITE)
+            "Usuários": ft.Text("Lista de Usuários via BD em breve...", color=ft.Colors.GREY_400),
+            "Produtos": ft.Text("Lista de Produtos via BD em breve...", color=ft.Colors.GREY_400),
+            "Categorias": ft.Text("Lista de Categorias via BD em breve...", color=ft.Colors.GREY_400),
+            "Mesas": ft.Text("Gerenciamento de Mesas via BD em breve...", color=ft.Colors.GREY_400)
         }
         
         def on_tab_click(e):
@@ -319,9 +335,9 @@ class AdminView(ft.View):
 
         return ft.Container(
             content=ft.Column([
-                ft.Text("Gerenciamento de Cadastros", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                ft.Text("Gerenciamento de Cadastros", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_900),
                 tab_row,
-                ft.Divider(color=ft.Colors.GREY_800),
+                ft.Divider(color=ft.Colors.GREY_500),
                 content_area
             ], expand=True),
             padding=20, expand=True
@@ -330,8 +346,8 @@ class AdminView(ft.View):
     def abrir_cozinha_admin(self):
         return ft.Container(
             content=ft.Column([
-                ft.Text("Visão Administrativa da Cozinha", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
-                ft.Divider(color=ft.Colors.GREY_800),
+                ft.Text("Visão Administrativa da Cozinha", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_900),
+                ft.Divider(color=ft.Colors.GREY_500),
                 ft.Text("Monitor de Pedidos em tempo real será implementado aqui...", color=ft.Colors.GREY_400)
             ], expand=True),
             padding=20, expand=True
