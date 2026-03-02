@@ -65,6 +65,7 @@ class Sidebar(ft.Container):
         self.is_open = True
         self.bgcolor = ft.Colors.GREY_900
         self.width = 250
+        self.animate = ft.Animation(300, ft.AnimationCurve.DECELERATE)
         
         # Header Elements
         self.btn_menu = ft.IconButton(icon=ft.Icons.MENU, on_click=self._toggle_menu, icon_color=ft.Colors.GREY_600)
@@ -163,7 +164,8 @@ class AdminView(ft.View):
 
     def abrir_dashboard(self):
         return ft.Column([
-            ft.Text("Você está na DashBoard", size=50, color=ft.Colors.GREY_500)
+            ft.Text("Dashboard", size=50, color=ft.Colors.PURPLE_500),
+            ft.Text("Módulo em construção...", color=ft.Colors.WHITE)
         ])
         
     def abrir_cadastros(self):
