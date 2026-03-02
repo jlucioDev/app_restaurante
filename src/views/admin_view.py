@@ -70,8 +70,15 @@ class Sidebar(ft.Container):
         # Header Elements
         self.btn_menu = ft.IconButton(icon=ft.Icons.MENU, on_click=self._toggle_menu, icon_color=ft.Colors.GREY_600)
         self.avatar = ft.CircleAvatar(content=ft.Text("JL"))
-        self.txtNomeUsuario = ft.Text("João Lúcio", weight=ft.FontWeight.BOLD, size=25, color=ft.Colors.WHITE)
-        self.txtPerfilUsuario = ft.Text("Administrador do Sistema", size=18, color=ft.Colors.GREY_300)
+        
+        self.txtNomeUsuario = ft.Text(
+            "João Lúcio", weight=ft.FontWeight.BOLD, size=25, color=ft.Colors.WHITE,
+            opacity=1.0, scale=1.0, animate_opacity=300, animate_scale=ft.Animation(300, ft.AnimationCurve.DECELERATE)
+        )
+        self.txtPerfilUsuario = ft.Text(
+            "Administrador do Sistema", size=18, color=ft.Colors.GREY_300,
+            opacity=1.0, scale=1.0, animate_opacity=300, animate_scale=ft.Animation(300, ft.AnimationCurve.DECELERATE)
+        )
         
         # Create Items
         self.items = [
@@ -100,12 +107,20 @@ class Sidebar(ft.Container):
         
         if self.is_open:
             self.width = 250
-            self.txtNomeUsuario.visible = True
-            self.txtPerfilUsuario.visible = True
+            #self.txtNomeUsuario.visible = True
+            #self.txtPerfilUsuario.visible = True
+            self.txtNomeUsuario.opacity = 1.0
+            self.txtNomeUsuario.scale = 1.0
+            self.txtPerfilUsuario.opacity = 1.0
+            self.txtPerfilUsuario.scale = 1.0
         else:
             self.width = 46
-            self.txtNomeUsuario.visible = False
-            self.txtPerfilUsuario.visible = False
+            self.txtNomeUsuario.opacity = 0.0
+            self.txtNomeUsuario.scale = 0.1
+            #self.txtNomeUsuario.visible = False
+            self.txtPerfilUsuario.opacity = 0.0
+            self.txtPerfilUsuario.scale = 0.1
+            #self.txtPerfilUsuario.visible = False
             
         self.update()
 
