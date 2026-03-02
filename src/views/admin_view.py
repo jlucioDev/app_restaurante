@@ -270,41 +270,59 @@ class AdminView(ft.View):
         )
         
     def abrir_cadastros(self):
-        tabs = ft.Tabs(
-            selected_index=0,
-            animation_duration=300,
-            indicator_color=ft.Colors.ORANGE_500,
-            label_color=ft.Colors.ORANGE_500,
-            unselected_label_color=ft.Colors.GREY_400,
-            tabs=[
-                ft.Tab(
-                    text="Usuários",
-                    icon=ft.Icons.PERSON,
-                    content=ft.Container(content=ft.Text("Lista de Usuários via BD em breve...", color=ft.Colors.WHITE), padding=20)
-                ),
-                ft.Tab(
-                    text="Produtos",
-                    icon=ft.Icons.FASTFOOD,
-                    content=ft.Container(content=ft.Text("Lista de Produtos via BD em breve...", color=ft.Colors.WHITE), padding=20)
-                ),
-                ft.Tab(
-                    text="Categorias",
-                    icon=ft.Icons.CATEGORY,
-                    content=ft.Container(content=ft.Text("Lista de Categorias via BD em breve...", color=ft.Colors.WHITE), padding=20)
-                ),
-                ft.Tab(
-                    text="Mesas",
-                    icon=ft.Icons.TABLE_RESTAURANT,
-                    content=ft.Container(content=ft.Text("Gerenciamento de Mesas via BD em breve...", color=ft.Colors.WHITE), padding=20)
-                )
-            ],
-            expand=True,
+        # We will dynamically switch the content container based on the selected tab
+        content_area = ft.Container(
+            content=ft.Text("Lista de Usuários via BD em breve...", color=ft.Colors.WHITE), 
+            padding=20, 
+            expand=True
         )
+        
+        # The distinct content for each tab
+        tab_contents = {
+            "Usuários": ft.Text("Lista de Usuários via BD em breve...", color=ft.Colors.WHITE),
+            "Produtos": ft.Text("Lista de Produtos via BD em breve...", color=ft.Colors.WHITE),
+            "Categorias": ft.Text("Lista de Categorias via BD em breve...", color=ft.Colors.WHITE),
+            "Mesas": ft.Text("Gerenciamento de Mesas via BD em breve...", color=ft.Colors.WHITE)
+        }
+        
+        def on_tab_click(e):
+            # Update active button visual
+            for c in tab_row.controls:
+                is_active = (c.data == e.control.data)
+                color = ft.Colors.ORANGE_500 if is_active else ft.Colors.GREY_400
+                c.content.controls[0].color = color
+                c.content.controls[1].color = color
+                c.update()
+                
+            # Update content view
+            content_area.content = tab_contents[e.control.data]
+            content_area.update()
+
+        tab_row = ft.Row([
+            ft.TextButton(
+                content=ft.Row([ft.Icon(ft.Icons.PERSON, color=ft.Colors.ORANGE_500), ft.Text("Usuários", color=ft.Colors.ORANGE_500)]),
+                data="Usuários", on_click=on_tab_click
+            ),
+            ft.TextButton(
+                content=ft.Row([ft.Icon(ft.Icons.FASTFOOD, color=ft.Colors.GREY_400), ft.Text("Produtos", color=ft.Colors.GREY_400)]),
+                data="Produtos", on_click=on_tab_click
+            ),
+            ft.TextButton(
+                content=ft.Row([ft.Icon(ft.Icons.CATEGORY, color=ft.Colors.GREY_400), ft.Text("Categorias", color=ft.Colors.GREY_400)]),
+                data="Categorias", on_click=on_tab_click
+            ),
+            ft.TextButton(
+                content=ft.Row([ft.Icon(ft.Icons.TABLE_RESTAURANT, color=ft.Colors.GREY_400), ft.Text("Mesas", color=ft.Colors.GREY_400)]),
+                data="Mesas", on_click=on_tab_click
+            ),
+        ])
+
         return ft.Container(
             content=ft.Column([
                 ft.Text("Gerenciamento de Cadastros", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                tab_row,
                 ft.Divider(color=ft.Colors.GREY_800),
-                tabs
+                content_area
             ], expand=True),
             padding=20, expand=True
         )
