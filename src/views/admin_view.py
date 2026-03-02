@@ -195,23 +195,129 @@ class AdminView(ft.View):
             
         self.main_content.update()
 
+    def _create_info_card(self, title, value, icon, color):
+        return ft.Container(
+            content=ft.Row([
+                ft.Icon(icon, size=40, color=color),
+                ft.Column([
+                    ft.Text(title, size=14, color=ft.Colors.GREY_400),
+                    ft.Text(value, size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                ], spacing=0)
+            ]),
+            bgcolor=ft.Colors.GREY_900,
+            padding=20,
+            border_radius=10,
+            expand=True
+        )
+
     def abrir_dashboard(self):
-        return ft.Column([
-            ft.Text("Dashboard", size=50, color=ft.Colors.PURPLE_500),
-            ft.Text("Módulo em construção...", color=ft.Colors.WHITE)
+        # Caixa Actions
+        btn_abrir_caixa = ft.ElevatedButton("Abrir Caixa", icon=ft.Icons.PLAY_ARROW, bgcolor=ft.Colors.GREEN_700, color=ft.Colors.WHITE)
+        btn_fechar_caixa = ft.ElevatedButton("Fechar Caixa", icon=ft.Icons.STOP, bgcolor=ft.Colors.RED_700, color=ft.Colors.WHITE)
+        row_acoes_caixa = ft.Row([btn_abrir_caixa, btn_fechar_caixa], alignment=ft.MainAxisAlignment.END)
+        
+        # Row 1: Financeiro
+        row_financeiro = ft.Row([
+            self._create_info_card("Valor Total Caixa", "R$ 1.250,00", ft.Icons.ATTACH_MONEY, ft.Colors.GREEN_400),
+            self._create_info_card("Entradas", "R$ 1.400,00", ft.Icons.ARROW_UPWARD, ft.Colors.LIGHT_BLUE_400),
+            self._create_info_card("Saídas", "R$ 150,00", ft.Icons.ARROW_DOWNWARD, ft.Colors.RED_400),
         ])
+        
+        # Row 2: Pedidos
+        row_pedidos = ft.Row([
+            self._create_info_card("Pedidos Pendentes", "5", ft.Icons.PENDING_ACTIONS, ft.Colors.ORANGE_400),
+            self._create_info_card("Em Preparação", "3", ft.Icons.SOUP_KITCHEN, ft.Colors.YELLOW_600),
+            self._create_info_card("Finalizados (Hoje)", "42", ft.Icons.CHECK_CIRCLE, ft.Colors.GREEN_400),
+        ])
+        
+        # Top Items list
+        lt_itens = ft.ListView(expand=True, spacing=10)
+        top_itens = [("Hambúrguer Artesanal", 15), ("Refrigerante Lata", 22), ("Pizza Margherita", 8)]
+        for nome, qtd in top_itens:
+            lt_itens.controls.append(
+                ft.ListTile(
+                    leading=ft.Icon(ft.Icons.FASTFOOD, color=ft.Colors.ORANGE_500),
+                    title=ft.Text(nome, color=ft.Colors.WHITE),
+                    trailing=ft.Text(f"{qtd} pedidos", color=ft.Colors.GREY_400)
+                )
+            )
+            
+        container_itens = ft.Container(
+            content=ft.Column([
+                ft.Text("Itens Mais Pedidos", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                lt_itens
+            ]),
+            bgcolor=ft.Colors.GREY_900,
+            padding=20,
+            border_radius=10,
+            expand=True
+        )
+        
+        return ft.Container(
+            content=ft.Column([
+                ft.Row([
+                    ft.Text("Dashboard", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                    row_acoes_caixa
+                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                ft.Divider(color=ft.Colors.GREY_800),
+                row_financeiro,
+                ft.Container(height=10),
+                row_pedidos,
+                ft.Container(height=10),
+                ft.Row([container_itens], expand=True)
+            ], expand=True),
+            padding=20, expand=True
+        )
         
     def abrir_cadastros(self):
-        return ft.Column([
-            ft.Text("Gerenciamento de Cadastros", size=50, color=ft.Colors.BLUE_500),
-            ft.Text("Módulo em construção...", color=ft.Colors.WHITE)
-        ])
+        tabs = ft.Tabs(
+            selected_index=0,
+            animation_duration=300,
+            indicator_color=ft.Colors.ORANGE_500,
+            label_color=ft.Colors.ORANGE_500,
+            unselected_label_color=ft.Colors.GREY_400,
+            tabs=[
+                ft.Tab(
+                    text="Usuários",
+                    icon=ft.Icons.PERSON,
+                    content=ft.Container(content=ft.Text("Lista de Usuários via BD em breve...", color=ft.Colors.WHITE), padding=20)
+                ),
+                ft.Tab(
+                    text="Produtos",
+                    icon=ft.Icons.FASTFOOD,
+                    content=ft.Container(content=ft.Text("Lista de Produtos via BD em breve...", color=ft.Colors.WHITE), padding=20)
+                ),
+                ft.Tab(
+                    text="Categorias",
+                    icon=ft.Icons.CATEGORY,
+                    content=ft.Container(content=ft.Text("Lista de Categorias via BD em breve...", color=ft.Colors.WHITE), padding=20)
+                ),
+                ft.Tab(
+                    text="Mesas",
+                    icon=ft.Icons.TABLE_RESTAURANT,
+                    content=ft.Container(content=ft.Text("Gerenciamento de Mesas via BD em breve...", color=ft.Colors.WHITE), padding=20)
+                )
+            ],
+            expand=True,
+        )
+        return ft.Container(
+            content=ft.Column([
+                ft.Text("Gerenciamento de Cadastros", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                ft.Divider(color=ft.Colors.GREY_800),
+                tabs
+            ], expand=True),
+            padding=20, expand=True
+        )
         
     def abrir_cozinha_admin(self):
-        return ft.Column([
-            ft.Text("Visão Administrativa da Cozinha", size=40, color=ft.Colors.ORANGE_500),
-            ft.Text("Módulo em construção...", color=ft.Colors.WHITE)
-        ])
+        return ft.Container(
+            content=ft.Column([
+                ft.Text("Visão Administrativa da Cozinha", size=30, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                ft.Divider(color=ft.Colors.GREY_800),
+                ft.Text("Monitor de Pedidos em tempo real será implementado aqui...", color=ft.Colors.GREY_400)
+            ], expand=True),
+            padding=20, expand=True
+        )
 
     async def open_home_view(self, e):
         await self.page.push_route("/")
