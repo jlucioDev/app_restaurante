@@ -69,7 +69,15 @@ class Sidebar(ft.Container):
         
         # Header Elements
         self.btn_menu = ft.IconButton(icon=ft.Icons.MENU, on_click=self._toggle_menu, icon_color=ft.Colors.GREY_600)
-        self.avatar = ft.CircleAvatar(content=ft.Text("JL"))
+        self.avatar = ft.CircleAvatar(
+            content=ft.Text("JL", size=30), 
+            color=ft.Colors.GREY_900, 
+            bgcolor=ft.Colors.ORANGE_900, 
+            width=200, 
+            radius=50,
+            scale=1.0,
+            animate_scale=ft.Animation(800, ft.AnimationCurve.DECELERATE)
+        )
         
         self.txtNomeUsuario = ft.Text("João Lúcio", weight=ft.FontWeight.BOLD, size=25, color=ft.Colors.WHITE)
         self.txtPerfilUsuario = ft.Text("Administrador do Sistema", size=18, color=ft.Colors.GREY_300)
@@ -79,16 +87,16 @@ class Sidebar(ft.Container):
             content=self.txtNomeUsuario,
             height=30, # default estimated height
             opacity=1.0,
-            animate_size=ft.Animation(300, ft.AnimationCurve.DECELERATE),
-            animate_opacity=300,
+            animate_size=ft.Animation(800, ft.AnimationCurve.DECELERATE),
+            animate_opacity=500,
             clip_behavior=ft.ClipBehavior.HARD_EDGE
         )
         self.cont_perfil = ft.Container(
             content=self.txtPerfilUsuario,
             height=25,
             opacity=1.0,
-            animate_size=ft.Animation(300, ft.AnimationCurve.DECELERATE),
-            animate_opacity=300,
+            animate_size=ft.Animation(800, ft.AnimationCurve.DECELERATE),
+            animate_opacity=500,
             clip_behavior=ft.ClipBehavior.HARD_EDGE
         )
         
@@ -119,12 +127,14 @@ class Sidebar(ft.Container):
         
         if self.is_open:
             self.width = 250
+            self.avatar.scale = 1.0
             self.cont_nome.opacity = 1.0
             self.cont_nome.height = 30
             self.cont_perfil.opacity = 1.0
             self.cont_perfil.height = 25
         else:
             self.width = 46
+            self.avatar.scale = 0.5
             self.cont_nome.opacity = 0.0
             self.cont_nome.height = 0
             self.cont_perfil.opacity = 0.0
